@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2')
 const inquirer = require('inquirer')
 const consoleTable = require('console.table')
 
@@ -31,22 +31,22 @@ start = () => {
         }).then(input => {
             switch (input.select) {
                 case 'Add':
-                    add();
-                    break;
+                    add()
+                    break
 
                 case 'View':
-                    view();
-                    break;
+                    view()
+                    break
 
                 case 'Update':
-                    updateRoles();
-                    break;
+                    updateRoles()
+                    break
 
                 case 'Exit':
-                    db.end();
-                    break;
+                    db.end()
+                    break
             }
-        });
+        })
 }
 
 add = () => {
@@ -64,20 +64,20 @@ add = () => {
         }).then(input => {
             switch (input.select) {
                 case 'Add Department':
-                    addDepartment();
-                    break;
+                    addDepartment()
+                    break
 
                 case 'Add Role':
-                    addRole();
-                    break;
+                    addRole()
+                    break
 
                 case 'Add Employee':
-                    addEmployee();
-                    break;
+                    addEmployee()
+                    break
 
                 case 'Exit':
-                    db.end();
-                    break;
+                    db.end()
+                    break
             }
         })
 }
@@ -95,11 +95,11 @@ addDepartment = () => {
                 department_name: input.new_department,
               },
               function (err, res) {
-                if (err) throw err;
-                console.log(`${input.new_department} was added.`);
-                start();
+                if (err) throw err
+                console.log(`${input.new_department} was added.`)
+                start()
               }
-            );
+            )
     })        
 }
 
@@ -138,12 +138,12 @@ addRole = () => {
             department_id: input.dept,
           },
           function (err, res) {
-            if (err) throw err;
-            console.log(`${input.title} was added.`);
-            start();
+            if (err) throw err
+            console.log(`${input.title} was added.`)
+            start()
           }
-        );
-      });
+        )
+      })
     })
 }
 
@@ -193,6 +193,7 @@ addEmployee = () => {
                 }, function (err, res) {
                     if (err) throw err
                     console.log(`${input.first_name} ${input.last_name}, was added.`)
+                    start()
                 })
             })
          })
@@ -214,20 +215,20 @@ view = () => {
         }).then(input => {
             switch (input.select) {
                 case 'View Departments':
-                    viewDepartments();
-                    break;
+                    viewDepartments()
+                    break
 
                 case 'View Roles':
-                    viewRoles();
-                    break;
+                    viewRoles()
+                    break
 
                 case 'View Employees':
-                    viewEmployees();
-                    break;
+                    viewEmployees()
+                    break
 
                 case 'Exit':
-                    db.end();
-                    break;
+                    db.end()
+                    break
             }
         })
 }
@@ -237,13 +238,13 @@ viewDepartments = () => {
         'SELECT department.id AS ID, department_name AS Department FROM department',
         function (err, res) {
           if (err) {
-            console.log(err);
+            console.log(err)
           } else {
-            console.table(res);
+            console.table(res)
           }
-          start();
+          start()
         }
-      );
+      )
 }
 
 viewRoles = () => {
@@ -251,27 +252,27 @@ viewRoles = () => {
         'SELECT role.id AS ID, title AS Title, salary AS Salary, department_id AS Department FROM role',
         function (err, res) {
           if (err) {
-            console.log(err);
+            console.log(err)
           } else {
-            console.table(res);
+            console.table(res)
           }
-          start();
+          start()
         }
-      );
+      )
 }
 
 viewEmployees = () => {
     db.query(
-        'SELECT first_name, last_name, role.title FROM employee INNER JOIN role ON role.id=employee.role_id',
+      'SELECT employee.id AS ID, employee.first_name AS "First Name", employee.last_name AS "Last Name", department.department_name AS Department, role.title AS "Role", role.salary AS Salary, CONCAT(manager.first_name, " ", manager.last_name) AS Manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee AS manager ON manager.id = employee.manager_id',
         function (err, res) {
           if (err) {
-            console.log(err);
+            console.log(err)
           } else {
-            console.table(res);
+            console.table(res)
           }
-          start();
+          start()
         }
-      );
+      )
 }
 
 updateRoles = () => {
